@@ -1,0 +1,10 @@
+{
+  "name": "gestion-poulailler",
+  "version": "1.0.0",
+  "dependencies": {
+    "pg": "^8.13.0"
+  },
+  "scripts": {
+    "dev": "node backend/server.js"
+  }
+}
