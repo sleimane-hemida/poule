@@ -1,4 +1,4 @@
-const pool = require('../lib/db');
+const { pool } = require('../lib/db');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,9 +32,13 @@ module.exports = async (req, res) => {
       return res.json({ message: 'Toutes les entrées ont été supprimées' });
     }
 
-    res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erreur serveur' });
+    console.error('API Error:', err.message, err.stack);
+    return res.status(500).json({
+      error: 'Erreur serveur',
+      detail: err.message,
+      hint: 'Vérifie que DATABASE_URL est bien définie dans Vercel et que la table existe dans Supabase'
+    });
   }
 };
