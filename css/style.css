@@ -157,6 +157,26 @@ thead th {
   color: #3d5a3d;
 }
 
+thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+thead th.sortable:hover {
+  background: #d8e8d8;
+}
+
+.sort-indicator {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.8em;
+  color: #8aaa8a;
+}
+
+thead th.sortable.active .sort-indicator {
+  color: #2d5a2d;
+}
+
 tbody td {
   padding: 12px 14px;
   border-bottom: 1px solid #eef4ee;

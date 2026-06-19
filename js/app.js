@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let entries = [];
   let editingId = null;
   let deleteTargetId = null;
+  let sortKey = 'date';
+  let sortDir = 'desc';
 
   function formatDate(dateStr) {
     if (!dateStr) return '';
@@ -96,7 +98,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function getSortValue(entry, key) {
+    if (key === 'date') return entry.date;
+    if (key === 'nombre') return entry.nombre;
+    if (key === 'race') return entry.race.toLowerCase();
+    return '';
+  }
+
+  function sortEntries() {
+    entries.sort((a, b) => {
+      const va = getSortValue(a, sortKey);
+      const vb = getSortValue(b, sortKey);
+      if (va < vb) return sortDir === 'asc' ? -1 : 1;
+      if (va > vb) return sortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  function updateSortIndicators() {
+    document.querySelectorAll('thead th.sortable').forEach(th => {
+      const key = th.dataset.sort;
+      th.classList.toggle('active', key === sortKey);
+      const span = th.querySelector('.sort-indicator');
+      if (key === sortKey) {
+        span.textContent = sortDir === 'asc' ? '▲' : '▼';
+      } else {
+        span.textContent = '';
+      }
+    });
+  }
+
   function render() {
+    sortEntries();
+    updateSortIndicators();
     tbody.innerHTML = '';
     entryCount.textContent = `${entries.length} entrée(s)`;
 
@@ -206,6 +240,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   clearModal.addEventListener('click', (e) => {
     if (e.target === clearModal) clearModal.style.display = 'none';
+  });
+
+  document.querySelectorAll('thead th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.sort;
+      if (sortKey === key) {
+        sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortKey = key;
+        sortDir = 'asc';
+      }
+      render();
+    });
   });
 
   dateInput.value = getToday();
