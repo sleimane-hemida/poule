@@ -25,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let deleteTargetId = null;
 
   function formatDate(dateStr) {
-    const d = new Date(dateStr + 'T00:00:00');
+    if (!dateStr) return '';
+    const d = new Date(dateStr.slice(0, 10) + 'T00:00:00');
     return d.toLocaleDateString('fr-FR', {
       day: '2-digit', month: 'long', year: 'numeric'
     });
@@ -133,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function fillForm(entry) {
-    dateInput.value = entry.date;
+    dateInput.value = entry.date.slice(0, 10);
     nombreInput.value = entry.nombre;
     raceInput.value = entry.race;
     editingId = entry.id;
@@ -162,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   tbody.addEventListener('click', (e) => {
     const btn = e.target.closest('.btn-icon');
     if (!btn) return;
-    const id = btn.dataset.id;
+    const id = Number(btn.dataset.id);
     if (btn.classList.contains('edit')) {
       const entry = entries.find(e => e.id === id);
       if (entry) fillForm(entry);
